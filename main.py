@@ -31,9 +31,9 @@ async def on_message(message):
     if message.author == client.user: # if the bot sends a message, ignore it
         return
     if "!openai" in message.content[0:7]:
-        await run_openai(message)
+        await ask_openai(message)
 
-async def run_openai(message):
+async def ask_openai(message):
     prompt = message.content[message.content.index("!openai") + 8:]
     completion = openai.Completion.create(
         engine="text-davinci-002",
@@ -43,7 +43,7 @@ async def run_openai(message):
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0)
-    func = message.channel.send(completion["choices"][0]["text"].lstrip())
+    func = await message.channel.send(completion["choices"][0]["text"].lstrip())
     await run_as_jekyll(func)
 
 async def run_as_jekyll(func):
